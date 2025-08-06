@@ -2,11 +2,10 @@
 
 class Conexion extends PDO
 {
-    private $nombre_de_base = 'railway';
+    private $nombre_de_base = 'examen24';
     private $usuario = 'root';
-    private $contrasena = 'EZMyZzGIlAZwsilQXTJknTHdWifnjaSN';
-    private $host = 'turntable.proxy.rlwy.net';  
-    private $puerto = '41358'; 
+    private $contrasena = '';
+    private $con;
 
     public function __construct(){
         try {
