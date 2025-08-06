@@ -5,25 +5,25 @@ class Conexion extends PDO
     private $nombre_de_base = 'railway';
     private $usuario = 'root';
     private $contrasena = 'EZMyZzGIlAZwsilQXTJknTHdWifnjaSN';
-    private $host = 'turntable.proxy.rlwy.net'; // Usa este si estás trabajando desde tu máquina local
-    private $puerto = '41358';
-    private $con;
+    private $host = 'turntable.proxy.rlwy.net';  
+    private $puerto = '41358'; 
 
     public function __construct(){
         try {
-            $dsn = "mysql:host={$this->host};port={$this->puerto};dbname={$this->nombre_de_base}";
+            $dsn = "mysql:host=127.0.0.1;port=3306;dbname=" . $this->nombre_de_base;
             $this->con = new PDO($dsn, $this->usuario, $this->contrasena);
             $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e){
-            echo "❌ Error de conexión: " . $e->getMessage();
+            echo $e->getMessage();
         }
     }
 
     public function insert_simple($tabla, $values, $params, $data){
         $stmt = $this->con->prepare("INSERT INTO ".$tabla." ( ".$values." ) VALUES ( ".$params." )");
+        //print_r("INSERT INTO ".$tabla." ( ".$values." ) VALUES ( ".$params." )");
         if($stmt->execute($data)) {
             return $this->con->lastInsertId();
-        } else {
+        }else{
             return '0';
         }
     }
@@ -35,30 +35,32 @@ class Conexion extends PDO
     }
 
     public function udpdate_where($tabla, $values, $where, $data){
-        $sql = "UPDATE " . $tabla . " SET " . $values . " WHERE " . $where;
+        $sql = "UPDATE "  .$tabla . " SET " . $values . " WHERE " . $where . "";
         $stmt = $this->con->prepare($sql);
         return $stmt->execute($data);
     }
 
     public function select_where_simple($tabla, $where){
         try {
-            $stmt = $this->con->query("SELECT * FROM " . $tabla . " WHERE " . $where);
+            $stmt = $this->con->query("SELECT * FROM " . $tabla . " WHERE " . $where . "");
+            //print_r("SELECT * FROM ".$tabla." WHERE ".$where."");
             $data = $stmt->fetchAll();
             return $data;
         } catch (\Throwable $th) {
-            return [];
         }
     }
-
+    
     public function select_where_simple_prueba($tabla, $where){
         try {
-            $stmt = $this->con->query("SELECT * FROM " . $tabla . " WHERE " . $where);
-            return "SELECT * FROM " . $tabla . " WHERE " . $where;
+            $stmt = $this->con->query("SELECT * FROM " . $tabla . " WHERE " . $where . "");
+            //print_r("SELECT * FROM ".$tabla." WHERE ".$where."");
+            //$data = $stmt->fetchAll();
+            return "SELECT * FROM " . $tabla . " WHERE " . $where . "";
         } catch (\Throwable $th) {
-            return $th->getMessage();
+            return $th;
         }
     }
+
 }
 
-// Instancia para probar conexión directamente
 $conexion = new Conexion();
